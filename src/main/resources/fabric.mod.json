@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "tarsa-valorant-mod",
+	"version": "${version}",
+	"name": "Valorant Mod",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/tarsa-valorant-mod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.tarsa.ValorantMod"
+		],
+		"client": [
+			"net.tarsa.ValorantModClient"
+		],
+		"fabric-datagen": [
+			"net.tarsa.ValorantModDataGenerator"
+		]
+	},
+	"mixins": [
+		"tarsa-valorant-mod.mixins.json",
+		{
+			"config": "tarsa-valorant-mod.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
