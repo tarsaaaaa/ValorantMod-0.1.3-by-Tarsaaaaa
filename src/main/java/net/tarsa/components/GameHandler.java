@@ -14,6 +14,7 @@ import static net.tarsa.util.ServerRegistry.PLAYER_GAME_DATA_ID_KEY;
 
 //Logic for the game.
 public class GameHandler {
+    //joins the player to a random game, tries* 10 times if couldn't the each.
     public static void joinRandomGame(ServerPlayerEntity player) {
         NbtCompound playerGameData = ((PlayerGameStatExt) player).getPlayerGameData();
         if (!Objects.equals(playerGameData.getString(PLAYER_GAME_DATA_ID_KEY), "")) {
