@@ -1,0 +1,21 @@
+{
+  "command.valorant.run" : "Valorant",
+  "command.valorant.join.error.alreadyInGame" : "Cannot join another game, you are already in one.",
+  "command.valorant.join.error.couldNotJoin" : "Couldn't join you to a game, Please try again.",
+  "command.valorant.join.successfullyJoined" : "Successfully joined game.",
+  "command.valorant.query.notInGame" : "You are not in a game.",
+  "command.valorant.query.success" : "Game info: \n id: %s",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : "",
+  "" : ""
+}

@@ -1,38 +1,46 @@
 package net.tarsa.components;
 
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.tarsa.interfaces.PlayerGameStatExt;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.Objects;
 import java.util.Random;
-
-import static net.tarsa.util.ServerRegistry.PLAYER_GAME_DATA_ID_KEY;
 
 //Logic for the game.
 public class GameHandler {
     //joins the player to a random game, tries* 10 times if couldn't the each.
     public static void joinRandomGame(ServerPlayerEntity player) {
-        NbtCompound playerGameData = ((PlayerGameStatExt) player).getPlayerGameData();
-        if (!Objects.equals(playerGameData.getString(PLAYER_GAME_DATA_ID_KEY), "")) {
+        PlayerStats playerStats = new PlayerStats(player);
+        if (!Objects.equals(playerStats.getPlayerGameID(), "")) {
             player.sendMessage(Text.translatable("command.valorant.join.error.alreadyInGame"), false);
             return;
         }
         String NewGameID = GameHandler.generateRandomID();
-        int i = 1;
-        while (!Objects.equals(playerGameData.getString(PLAYER_GAME_DATA_ID_KEY), NewGameID) && i < 10) {
-            playerGameData.putString(PLAYER_GAME_DATA_ID_KEY, NewGameID);
-            i++;
-        }
-        if (!Objects.equals(playerGameData.getString(PLAYER_GAME_DATA_ID_KEY), NewGameID)) {
-            player.sendMessage(Text.translatable("command.valorant.join.error.couldNotJoin"), false);
+        playerStats.setPlayerGameID(NewGameID);
+        GlobalGameStats.setCurrentIDs(NewGameID);
+        player.sendMessage(Text.translatable("command.valorant.join.successfullyJoined"), false);
+    }
+
+    //gives the player's game info (id, )
+    public static void gameQuery(ServerPlayerEntity player) {
+        PlayerStats playerStats = new PlayerStats(player);
+        if (Objects.equals(playerStats.getPlayerGameID(), "")) {
+            player.sendMessage(Text.translatable("command.valorant.query.notInGame"), false);
             return;
         }
-        GameStats.setCurrentIDs(NewGameID);
-        player.sendMessage(Text.translatable("command.valorant.join.successfullyJoined"), false);
+        String GameID = playerStats.getPlayerGameID();
+        player.sendMessage(Text.translatable("command.valorant.query.success", GameID), false);
+    }
+
+    public static void leaveGame(ServerPlayerEntity player) {
+        PlayerStats playerStats = new PlayerStats(player);
+        if (Objects.equals(playerStats.getPlayerGameID(), "")) {
+            player.sendMessage(Text.translatable("command.valorant.leave.error.notInGame"), false);
+            return;
+        }
+        String GameID = playerStats.getPlayerGameID();
     }
 
     //generates a random id for the game (excludes already in use ids')
@@ -48,10 +56,10 @@ public class GameHandler {
             }
             String generatedID = id.toString();
             //checks if the id is in use, if yes regenerates another id, if not returns the id.
-            if (GameStats.getCurrentIDs() == null) {
+            if (GlobalGameStats.getCurrentIDs() == null) {
                 return generatedID;
             }
-            for (String a : GameStats.getCurrentIDs()) {
+            for (String a : GlobalGameStats.getCurrentIDs()) {
                 if (!Objects.equals(a, generatedID)) {
                     return generatedID;
                 }
