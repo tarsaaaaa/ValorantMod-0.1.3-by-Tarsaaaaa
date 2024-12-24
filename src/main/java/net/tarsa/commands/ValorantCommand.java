@@ -28,8 +28,6 @@ public class ValorantCommand {
         );
     }
 
-
-
     private static int leave(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = context.getSource().getPlayer();
