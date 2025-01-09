@@ -13,8 +13,8 @@ public class PlayerStats {
     private final String PlayerGameID;
     private final NbtCompound PlayerDataCompound;
     public PlayerStats(ServerPlayerEntity player) {
-        PlayerDataCompound = ((PlayerGameStatExt) player).getPlayerGameData();
-        PlayerGameID = PlayerDataCompound.getString(PLAYER_GAME_DATA_ID_KEY);
+        this.PlayerDataCompound = ((PlayerGameStatExt) player).getPlayerGameData();
+        this.PlayerGameID = PlayerDataCompound.getString(PLAYER_GAME_DATA_ID_KEY);
     }
 
     public void setPlayerGameID(String id) {

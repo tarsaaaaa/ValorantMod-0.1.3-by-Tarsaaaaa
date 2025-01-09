@@ -6,6 +6,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -16,6 +17,7 @@ public class GameHandler {
     /*
     * * filename = gameID *
     * current-players=
+    * player-0=
     * player-1=
     * . . .
     * player-n=
@@ -44,17 +46,6 @@ public class GameHandler {
         String NewGameID = GameHandler.generateRandomID();
         createGame(NewGameID, server);
         addPlayersToGame(NewGameID, player, server);
-        playerStats.setPlayerGameID(NewGameID);
-        GlobalGameStats.setCurrentIDs(NewGameID);
-        player.sendMessage(Text.translatable("command.valorant.create.successfully-created"), false);
-    }
-    public static void createGameWithRandomID(ServerPlayerEntity player) {
-        PlayerStats playerStats = new PlayerStats(player);
-        if (!Objects.equals(playerStats.getPlayerGameID(), "")) {
-            player.sendMessage(Text.translatable("command.valorant.create.error.already-in-game"), false);
-            return;
-        }
-        String NewGameID = GameHandler.generateRandomID();
         playerStats.setPlayerGameID(NewGameID);
         GlobalGameStats.setCurrentIDs(NewGameID);
         player.sendMessage(Text.translatable("command.valorant.create.successfully-created"), false);
@@ -90,7 +81,7 @@ public class GameHandler {
         final Random RANDOM = new Random();
         int count = 0;
         if (inUseIds != null) {
-            for (String id : inUseIds) {
+            for (String ignored : inUseIds) {
                 count++;
             }
             int randomNo = RANDOM.nextInt(count);
@@ -129,13 +120,16 @@ public class GameHandler {
     }
 
     //attempts a leave operation on the player from the current game they are in.
-    public static void leaveGame(ServerPlayerEntity player) {
+    public static void leaveGame(ServerPlayerEntity player, ServerCommandSource commandSource) {
         PlayerStats playerStats = new PlayerStats(player);
-        if (Objects.equals(playerStats.getPlayerGameID(), "")) {
-            player.sendMessage(Text.translatable("command.valorant.leave.error.notInGame"), false);
-            return;
-        }
-        String GameID = playerStats.getPlayerGameID();
+        MinecraftServer server = commandSource.getServer();
+        String gameID = playerStats.getPlayerGameID();
+        int currentPlayers = Integer.parseInt(Objects.requireNonNull(ExternalFileHandler.readFile(1, "valorant", gameID + ".txt", "current-players", server)));
+        int newPlayers = currentPlayers - 1;
+        String playerKey = "player-" + newPlayers;
+        ExternalFileHandler.modifyFile(currentPlayers+1, playerKey, "", "valorant", gameID + ".txt", server);
+        ExternalFileHandler.modifyFile(1, "current-players", String.valueOf(newPlayers), "valorant", gameID + ".txt", server);
+
     }
 
     //generates a random id for the game (excludes already in use ids')

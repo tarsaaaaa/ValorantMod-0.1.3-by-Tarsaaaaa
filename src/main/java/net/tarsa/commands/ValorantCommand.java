@@ -35,10 +35,9 @@ public class ValorantCommand {
             source.sendFeedback(() -> Text.translatable("command.valorant.leave.error.notPlayer"), false);
             return 1;
         }
-        GameHandler.leaveGame(player);
+        GameHandler.leaveGame(player, source);
         return 0;
     }
-
     private static int joinWithoutID(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = context.getSource().getPlayer();
@@ -49,7 +48,6 @@ public class ValorantCommand {
         GameHandler.joinRandomGame(player, source);
         return 0;
     }
-
     private static int joinWithID(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = context.getSource().getPlayer();
@@ -61,7 +59,6 @@ public class ValorantCommand {
         GameHandler.joinGameWithId(player, source, gameId);
         return 0;
     }
-
     private static int createWithoutID(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = context.getSource().getPlayer();
@@ -72,7 +69,6 @@ public class ValorantCommand {
         GameHandler.createGameWithRandomID(player, source);
         return 0;
     }
-
     private static int createWithID(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = context.getSource().getPlayer();
@@ -84,7 +80,6 @@ public class ValorantCommand {
         GameHandler.createGameWithGivenId(player, source, gameId);
         return 0;
     }
-
     private static int query(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = context.getSource().getPlayer();
@@ -95,12 +90,9 @@ public class ValorantCommand {
         GameHandler.gameQuery(player);
         return 0;
     }
-
     private static int valorant(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         source.sendFeedback(() -> Text.translatable("command.valorant.run"), false);
         return 0;
     }
-
-
 }
